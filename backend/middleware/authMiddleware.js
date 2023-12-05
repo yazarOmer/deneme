@@ -18,7 +18,9 @@ const protected = asyncHandler(async (req, res, next) => {
             throw new Error("Not authorized");
         }
     } else {
-        res.status(401)
+        res.status(401);
         throw new Error("Not authorized");
     }
 });
+
+module.exports = protected;
