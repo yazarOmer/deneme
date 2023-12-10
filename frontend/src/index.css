@@ -7,6 +7,6 @@
     html,
     body,
     :root {
-        @apply font-jakarta box-border p-0 m-0;
+        @apply font-jakarta box-border p-0 m-0 bg-dark-grey;
     }
 }

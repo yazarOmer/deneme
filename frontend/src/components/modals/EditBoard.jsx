@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { createBoard, reset } from "../../redux/features/board/boardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    updateBoard,
+    reset,
+    getAllBoards,
+} from "../../redux/features/board/boardSlice";
+import { useParams } from "react-router-dom";
 
-const AddBoard = ({ closeModal }) => {
-    const [name, setName] = useState("");
-    const [cols, setColumns] = useState([]);
+const EditBoard = ({ closeModal }) => {
+    const { selectedBoard } = useSelector((state) => state.board);
+    const { id } = useParams();
+
+    const [name, setName] = useState(selectedBoard.name);
+    const [cols, setColumns] = useState(selectedBoard.columns);
 
     const dispatch = useDispatch();
 
@@ -19,8 +27,9 @@ const AddBoard = ({ closeModal }) => {
     const columns = [];
     cols.map((column) => columns.push(column.value));
 
-    const handleCreateBoard = () => {
-        dispatch(createBoard({ name, columns }));
+    const handleUpdateBoard = () => {
+        dispatch(updateBoard({ id, name, columns }));
+        dispatch(getAllBoards());
         dispatch(reset());
         closeModal(false);
     };
@@ -30,7 +39,7 @@ const AddBoard = ({ closeModal }) => {
             <div className="w-[480px]  flex flex-col p-8 bg-dark-grey rounded-md">
                 <div className="flex items-center justify-between">
                     <h1 className="text-lg font-semibold text-white-color">
-                        Add New Board
+                        Edit Board
                     </h1>
                     <IoClose
                         onClick={() => closeModal(false)}
@@ -41,7 +50,7 @@ const AddBoard = ({ closeModal }) => {
 
                 <label
                     htmlFor=""
-                    className="font-bold text-xs text-white-color mt-8"
+                    className="font-bold text-xs text-white-color mt-8 mb-2"
                 >
                     Board Name
                 </label>
@@ -55,7 +64,7 @@ const AddBoard = ({ closeModal }) => {
 
                 <label
                     htmlFor=""
-                    className="font-bold text-xs text-white-color mt-6"
+                    className="font-bold text-xs text-white-color mt-6 mb-2"
                 >
                     Board Columns
                 </label>
@@ -104,14 +113,14 @@ const AddBoard = ({ closeModal }) => {
                     + Add New Column
                 </button>
                 <button
-                    onClick={() => handleCreateBoard()}
+                    onClick={() => handleUpdateBoard()}
                     className="w-full py-2.5 text-white-color text-sm font-semibold bg-main-purple rounded-[20px] mt-3"
                 >
-                    Create New Board
+                    Save Changes
                 </button>
             </div>
         </div>
     );
 };
 
-export default AddBoard;
+export default EditBoard;

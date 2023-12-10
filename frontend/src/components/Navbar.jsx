@@ -12,15 +12,9 @@ import navbar from "../assets/navbar.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllBoards, reset } from "../redux/features/board/boardSlice";
 import { toast } from "react-toastify";
-import Loader from "./Loader";
 import AddBoard from "./modals/AddBoard";
 
 const Navbar = ({ navbarOpen, navbarToggle }) => {
-    // const boards = [
-    //     { name: "platform", id: 1 },
-    //     { name: "marketing", id: 2 },
-    //     { name: "asdada", id: 3 },
-    // ];
     const [showAddBoardModal, setShowAddBoardModal] = useState(false);
 
     const { id } = useParams();
@@ -31,14 +25,19 @@ const Navbar = ({ navbarOpen, navbarToggle }) => {
         (state) => state.board
     );
 
+    // console.log(id);
+
     useEffect(() => {
-        dispatch(reset());
         dispatch(getAllBoards());
 
         if (isError) {
             toast.error(message);
         }
-    }, []);
+
+        return () => {
+            dispatch(reset());
+        };
+    }, [dispatch]);
 
     return (
         <nav
@@ -63,12 +62,12 @@ const Navbar = ({ navbarOpen, navbarToggle }) => {
                             to={`/boards/${item._id}`}
                             className={({ isActive }) =>
                                 isActive
-                                    ? "bg-main-purple text-white-color w-[90%] font-bold py-3.5 px-6  text-sm capitalize rounded-r-[100px] flex gap-3 hover:bg-main-purple-hover hover:text-white-color tracking-normal transition"
-                                    : "bg-dark-grey text-medium-grey w-[90%] font-bold py-3.5 px-6  text-sm capitalize rounded-r-[100px] flex gap-3 hover:bg-main-purple-hover hover:text-white-color tracking-normal transition"
+                                    ? "bg-main-purple text-white-color w-[90%] font-bold py-3.5 px-6  text-sm capitalize rounded-r-[100px] flex gap-3 hover:bg-white-color hover:text-main-purple tracking-normal transition"
+                                    : "bg-dark-grey text-medium-grey w-[90%] font-bold py-3.5 px-6  text-sm capitalize rounded-r-[100px] flex gap-3 hover:bg-white-color hover:text-main-purple tracking-normal transition"
                             }
                         >
                             <img
-                                src={id == item.id ? linkLogoActive : linkLogo}
+                                src={id == item._id ? linkLogoActive : linkLogo}
                                 alt=""
                             />
                             {item.name}
@@ -78,31 +77,34 @@ const Navbar = ({ navbarOpen, navbarToggle }) => {
 
                 <button
                     onClick={() => setShowAddBoardModal(true)}
-                    className="text-main-purple font-bold flex items-center w-[90%] py-3.5 px-6 text-sm capitalize rounded-r-[100px] gap-3 hover:bg-main-purple-hover transition"
+                    className="text-main-purple font-bold flex items-center w-[90%] py-3.5 px-6 text-sm capitalize rounded-r-[100px] gap-3 hover:bg-white-color hover:text-main-purple transition"
                 >
                     <img src={createBoardLogo} alt="" />+ Create New Board
                 </button>
             </div>
 
-            <div className="w-[83%] mx-auto">
-                <div className="flex items-center justify-center gap-4 w-full h-12 rounded-md bg-very-dark-grey ">
-                    <img src={sun} alt="" />
-                    <img src={toggle} alt="" />
-                    <img src={moon} alt="" />
+            <div className="w-[90%]">
+                <div className="w-[83%] mx-auto">
+                    <div className="flex items-center justify-center gap-4 w-full h-12 rounded-md bg-very-dark-grey ">
+                        <img src={sun} alt="" />
+                        <img src={toggle} alt="" />
+                        <img src={moon} alt="" />
+                    </div>
                 </div>
                 <button
                     onClick={() => navbarToggle((prev) => !prev)}
-                    className="flex mr-auto items-center text-medium-grey font-bold py-4 px-6 text-sm gap-3 w-full"
+                    className="flex w-full mr-auto mt-2 items-center rounded-r-[100px] text-medium-grey font-bold py-4 px-6 text-sm gap-3  hover:bg-white-color hover:text-main-purple"
                 >
                     <img src={eye} alt="" />
                     Hide Sidebar
                 </button>
             </div>
+
             <button
                 onClick={() => navbarToggle((prev) => !prev)}
                 className={`${
                     navbarOpen ? "flex items-center justify-center" : "hidden"
-                } bg-main-purple-hover w-14 h-12  rounded-r-[100px] absolute left-[300px] bottom-10 z-10`}
+                } bg-main-purple hover:bg-main-purple-hover transition w-14 h-12  rounded-r-[100px] absolute left-[300px] bottom-10 z-10`}
             >
                 <img src={navbar} alt="" />
             </button>

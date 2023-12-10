@@ -8,6 +8,22 @@ const getAllBoards = async () => {
     return response.data;
 };
 
+const updateBoard = async (data) => {
+    const { name, columns } = data;
+    const response = await axios.put(API_URL + `getBoard/${data.id}`, {
+        name,
+        columns,
+    });
+
+    return response.data;
+};
+
+const getBoard = async (id) => {
+    const response = await axios.get(API_URL + `getBoard/${id}`);
+
+    return response.data;
+};
+
 const createBoard = async (data) => {
     const response = await axios.post(API_URL + "create", data);
 
@@ -17,6 +33,8 @@ const createBoard = async (data) => {
 const boardService = {
     getAllBoards,
     createBoard,
+    updateBoard,
+    getBoard,
 };
 
 export default boardService;

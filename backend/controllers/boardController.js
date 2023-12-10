@@ -2,21 +2,37 @@ const asyncHandler = require("express-async-handler");
 const Board = require("../models/boardModel");
 
 const getBoard = asyncHandler(async (req, res) => {
-    const boardId = req.params.id;
-
-    const board = await Board.findOne({ boardId });
+    const { id } = req.params;
+    const board = await Board.findById(id);
 
     if (board) {
-        res.json({
+        res.status(200).json({
             _id: board._id,
             name: board.name,
             columns: board.columns,
         });
     }
+});
 
-    // if (board) {
-    //     res.json(123);
-    // }
+const updateBoard = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { name, columns } = req.body;
+    console.log(name, columns);
+    const board = await Board.findByIdAndUpdate(
+        id,
+        { name, columns },
+        {
+            new: true,
+        }
+    );
+
+    if (board) {
+        res.status(200).json({
+            _id: board._id,
+            name: board.name,
+            columns: board.columns,
+        });
+    }
 });
 
 const getAllBoards = asyncHandler(async (req, res) => {
@@ -47,4 +63,4 @@ const createBoard = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { getBoard, getAllBoards, createBoard };
+module.exports = { getBoard, getAllBoards, createBoard, updateBoard };

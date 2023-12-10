@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import kanbanLogo from "../assets/kanban-logo.svg";
 import options from "../assets/options.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { getBoard, reset } from "../redux/features/board/boardSlice";
 
 const Header = ({ navbarOpen }) => {
     const { id } = useParams();
+
+    const dispatch = useDispatch();
+
+    const { selectedBoard } = useSelector((state) => state.board);
+
+    useEffect(() => {
+        dispatch(reset());
+        dispatch(getBoard(id));
+    }, [id]);
+
     return (
         <header
             className={`${
@@ -24,8 +36,8 @@ const Header = ({ navbarOpen }) => {
                     navbarOpen ? "border-l px-4 border-[#979797]/25" : ""
                 } h-24`}
             >
-                <h3 className="text-2xl font-bold text-white-color">
-                    {id ? id : "Select a Board"}
+                <h3 className="text-2xl font-bold text-white-color capitalize">
+                    {selectedBoard ? selectedBoard.name : ""}
                 </h3>
                 <div className="flex items-center gap-2">
                     <button
