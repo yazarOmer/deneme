@@ -6,11 +6,7 @@ const boardSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        columns: [
-            {
-                type: mongoose.Schema.Types.String,
-            },
-        ],
+        columns: { type: [String], required: true },
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     },
     {
@@ -20,4 +16,4 @@ const boardSchema = mongoose.Schema(
 
 const Board = mongoose.model("Board", boardSchema);
 
-export default Board;
+module.exports = Board;
