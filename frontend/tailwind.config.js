@@ -6,6 +6,9 @@ export default {
             fontFamily: {
                 jakarta: ["Plus Jakarta Sans", "sans-serif"],
             },
+            dropShadow: {
+                task: "0 4px 6px rgba(54, 78, 126, 0.1)",
+            },
         },
         colors: {
             "very-dark-grey": "#20212C",

@@ -5,22 +5,26 @@ import { createBoard, reset } from "../../redux/features/board/boardSlice";
 
 const AddBoard = ({ closeModal }) => {
     const [name, setName] = useState("");
-    const [cols, setColumns] = useState([]);
+    const [columns, setColumns] = useState([]);
 
     const dispatch = useDispatch();
 
     const handleInputChange = (id, event) => {
-        const newFormValues = cols.map((input) =>
-            input.id === id ? { ...input, value: event.target.value } : input
+        const newFormValues = columns.map((input, i) =>
+            i === id ? { ...input, name: event.target.value } : input
         );
         setColumns(newFormValues);
     };
 
-    const columns = [];
-    cols.map((column) => columns.push(column.value));
+    const handleDelete = (id) => {
+        const newColumns = columns.filter((col) => col.id !== id);
+        setColumns(newColumns);
+    };
+
+    const boardData = { name, columns };
 
     const handleCreateBoard = () => {
-        dispatch(createBoard({ name, columns }));
+        dispatch(createBoard(boardData));
         dispatch(reset());
         closeModal(false);
     };
@@ -41,7 +45,7 @@ const AddBoard = ({ closeModal }) => {
 
                 <label
                     htmlFor=""
-                    className="font-bold text-xs text-white-color mt-8"
+                    className="font-bold text-xs text-white-color mt-8 mb-2"
                 >
                     Board Name
                 </label>
@@ -60,29 +64,16 @@ const AddBoard = ({ closeModal }) => {
                     Board Columns
                 </label>
 
-                {cols.map((column, i) => {
+                {columns.map((column, i) => {
                     return (
-                        <div
-                            key={column.id}
-                            className="flex items-center gap-1 mb-2"
-                        >
+                        <div key={i} className="flex items-center gap-1 mb-2">
                             <input
                                 type="text"
-                                value={column.value}
-                                onChange={(e) =>
-                                    handleInputChange(column.id, e)
-                                }
+                                value={column.name}
+                                onChange={(e) => handleInputChange(i, e)}
                                 className="rounded-md w-full p-2 text-sm border border-medium-grey/25 outline-none text-white-color bg-dark-grey"
                             />
-                            <button
-                                onClick={() =>
-                                    setColumns(
-                                        cols.filter(
-                                            (input) => input.id !== column.id
-                                        )
-                                    )
-                                }
-                            >
+                            <button onClick={() => handleDelete(column.id)}>
                                 <IoClose
                                     size={32}
                                     className="text-medium-grey hover:bg-dark-border transition cursor-pointer rounded-full"
@@ -96,7 +87,7 @@ const AddBoard = ({ closeModal }) => {
                     onClick={() =>
                         setColumns((prev) => [
                             ...prev,
-                            { value: "", id: Math.random() },
+                            { name: "", id: Math.random() },
                         ])
                     }
                     className="w-full py-2.5 text-main-purple text-sm font-semibold bg-white-color rounded-[20px] mt-3"

@@ -6,7 +6,7 @@ const boardSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        columns: { type: [String], required: true },
+        columns: [{ name: String }],
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     },
     {

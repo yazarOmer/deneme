@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import kanbanLogo from "../assets/kanban-logo.svg";
 import options from "../assets/options.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getBoard, reset } from "../redux/features/board/boardSlice";
+import AddTask from "./modals/AddTask";
 
 const Header = ({ navbarOpen }) => {
     const { id } = useParams();
 
     const dispatch = useDispatch();
+
+    const [showAddTask, setShowAddTask] = useState(false);
 
     const { selectedBoard } = useSelector((state) => state.board);
 
@@ -16,6 +19,10 @@ const Header = ({ navbarOpen }) => {
         dispatch(reset());
         dispatch(getBoard(id));
     }, [id]);
+
+    if (showAddTask) {
+        return <AddTask closeModal={setShowAddTask} />;
+    }
 
     return (
         <header
@@ -41,11 +48,13 @@ const Header = ({ navbarOpen }) => {
                 </h3>
                 <div className="flex items-center gap-2">
                     <button
+                        disabled={selectedBoard?.columns?.length == 0}
+                        onClick={() => setShowAddTask(true)}
                         className={`bg-main-purple hover:bg-main-purple-hover ${
                             id
                                 ? "bg-main-purple hover:bg-main-purple-hover text-white-color"
                                 : "bg-main-purple/25 cursor-not-allowed text-medium-grey hover:bg-main-purple/25"
-                        } transition h-10 px-4 rounded-3xl  font-semibold text-sm`}
+                        } transition disabled:cursor-not-allowed disabled:bg-main-purple-hover h-10 px-4 rounded-3xl  font-semibold text-sm`}
                     >
                         Add New Task
                     </button>

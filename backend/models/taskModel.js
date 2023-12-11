@@ -16,3 +16,7 @@ const taskSchema = mongoose.Schema({
     },
     boardId: { type: mongoose.Schema.Types.ObjectId, ref: "Board" },
 });
+
+const Task = mongoose.model("Task", taskSchema);
+
+module.exports = Task;

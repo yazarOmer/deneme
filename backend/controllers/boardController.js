@@ -17,7 +17,7 @@ const getBoard = asyncHandler(async (req, res) => {
 const updateBoard = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, columns } = req.body;
-    console.log(name, columns);
+
     const board = await Board.findByIdAndUpdate(
         id,
         { name, columns },

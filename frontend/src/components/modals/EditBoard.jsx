@@ -13,19 +13,21 @@ const EditBoard = ({ closeModal }) => {
     const { id } = useParams();
 
     const [name, setName] = useState(selectedBoard.name);
-    const [cols, setColumns] = useState(selectedBoard.columns);
+    const [columns, setColumns] = useState(selectedBoard.columns);
 
     const dispatch = useDispatch();
 
     const handleInputChange = (id, event) => {
-        const newFormValues = cols.map((input) =>
-            input.id === id ? { ...input, value: event.target.value } : input
+        const newFormValues = columns.map((input, i) =>
+            input._id === id ? { ...input, name: event.target.value } : input
         );
         setColumns(newFormValues);
     };
 
-    const columns = [];
-    cols.map((column) => columns.push(column.value));
+    const handleDelete = (id) => {
+        const newColumns = columns.filter((col) => col._id !== id);
+        setColumns(newColumns);
+    };
 
     const handleUpdateBoard = () => {
         dispatch(updateBoard({ id, name, columns }));
@@ -69,29 +71,25 @@ const EditBoard = ({ closeModal }) => {
                     Board Columns
                 </label>
 
-                {cols.map((column, i) => {
+                {columns.map((column, i) => {
                     return (
                         <div
-                            key={column.id}
+                            key={column?._id}
                             className="flex items-center gap-1 mb-2"
                         >
                             <input
                                 type="text"
-                                value={column.value}
+                                value={
+                                    columns.length > 0 && column?.name !== null
+                                        ? column?.name
+                                        : ""
+                                }
                                 onChange={(e) =>
-                                    handleInputChange(column.id, e)
+                                    handleInputChange(column?._id, e)
                                 }
                                 className="rounded-md w-full p-2 text-sm border border-medium-grey/25 outline-none text-white-color bg-dark-grey"
                             />
-                            <button
-                                onClick={() =>
-                                    setColumns(
-                                        cols.filter(
-                                            (input) => input.id !== column.id
-                                        )
-                                    )
-                                }
-                            >
+                            <button onClick={() => handleDelete(column?._id)}>
                                 <IoClose
                                     size={32}
                                     className="text-medium-grey hover:bg-dark-border transition cursor-pointer rounded-full"

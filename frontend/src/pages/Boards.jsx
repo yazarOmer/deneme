@@ -2,13 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import EditBoard from "../components/modals/EditBoard";
+import TaskGroup from "../components/TaskGroup";
+import { getAllTasks, reset } from "../redux/features/task/taskSlice";
 
 const Boards = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const navbarOpen = useOutletContext();
 
     const { selectedBoard } = useSelector((state) => state.board);
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getAllTasks(selectedBoard?._id));
+
+        return () => {
+            dispatch(reset());
+        };
+    }, [selectedBoard]);
+
     const [showEditBoardModal, setShowEditBoardModal] = useState(false);
 
     if (showEditBoardModal) {
@@ -21,9 +33,9 @@ const Boards = () => {
                 !navbarOpen
                     ? "w-[calc(100%-300px)] fixed left-[300px] transition-all duration-500"
                     : "w-full"
-            } bg-dark-grey h-[calc(100%-96px)] fixed top-24 flex items-center justify-center border-t border-[#979797]/25`}
+            } bg-very-dark-grey h-[calc(100%-96px)] fixed top-24 flex items-center justify-center border-t border-[#979797]/25`}
         >
-            {selectedBoard?.columns?.length == 0 && (
+            {selectedBoard?.columns?.length == 0 ? (
                 <div className="flex flex-col items-center gap-5">
                     <p className="text-lg text-medium-grey font-semibold">
                         This board is empty. Create a new column to get started
@@ -35,6 +47,8 @@ const Boards = () => {
                         + Add New Column
                     </button>
                 </div>
+            ) : (
+                <TaskGroup selected={selectedBoard} />
             )}
         </div>
     );
