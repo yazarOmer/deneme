@@ -84,7 +84,7 @@ const Navbar = ({ navbarOpen, navbarToggle }) => {
             </div>
 
             <div className="w-[90%]">
-                <div className="w-[83%] mx-auto">
+                <div className="w-[90%] mx-auto">
                     <div className="flex items-center justify-center gap-4 w-full h-12 rounded-md bg-very-dark-grey ">
                         <img src={sun} alt="" />
                         <img src={toggle} alt="" />
